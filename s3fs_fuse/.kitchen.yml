@@ -12,5 +12,5 @@ platforms:
 suites:
   - name: default
     run_list:
-      - recipe[s3fs-fuse::default]
+      - recipe[s3fs_fuse::default]
     attributes:

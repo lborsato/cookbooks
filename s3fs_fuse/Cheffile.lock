@@ -20,11 +20,11 @@ SITE
 PATH
   remote: .
   specs:
-    s3fs-fuse (0.1.4)
+    s3fs_fuse (0.1.4)
       rc_mon (>= 0.0.0)
 
 DEPENDENCIES
   bluepill (>= 0)
   rc_mon (>= 0)
-  s3fs-fuse (>= 0)
+  s3fs_fuse (>= 0)
 

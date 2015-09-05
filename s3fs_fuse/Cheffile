@@ -2,7 +2,7 @@
 
 site 'https://supermarket.getchef.com/api/v1'
 
-cookbook 's3fs-fuse', path: '.'
+cookbook 's3fs_fuse', path: '.'
 
 cookbook 'rc_mon'
 cookbook 'bluepill'
