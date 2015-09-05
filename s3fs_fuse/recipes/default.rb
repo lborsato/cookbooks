@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: s3fs-fuse
+# Cookbook Name:: s3fs_fuse
 # Recipe:: default
 #
 

@@ -1,12 +1,12 @@
 include_recipe "bluepill"
 
-if(File.exists?('/etc/init/s3fs-fuse.conf'))
-  service "s3fs-fuse" do
+if(File.exists?('/etc/init/s3fs_fuse.conf'))
+  service "s3fs_fuse" do
     provider Chef::Provider::Service::Upstart
     action :stop
   end
 
-  file '/etc/init/s3fs-fuse.conf' do
+  file '/etc/init/s3fs_fuse.conf' do
     action :delete
   end
 end

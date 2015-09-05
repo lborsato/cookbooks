@@ -1,4 +1,4 @@
-name             "s3fs-fuse"
+name             "s3fs_fuse"
 maintainer       "Heavy Water Operations, LLC."
 maintainer_email "support@hw-ops.com"
 license          "Apache 2.0"
