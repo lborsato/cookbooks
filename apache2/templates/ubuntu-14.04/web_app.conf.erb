@@ -1,0 +1,99 @@
+<VirtualHost *:80>
+  ServerName <%= @params[:server_name] %>
+  <% if @params[:server_aliases] && !@params[:server_aliases].empty? -%>
+  ServerAlias <% @params[:server_aliases].each do |a| %><%= "#{a}" %> <% end %>
+  <% end -%>
+  DocumentRoot <%= @params[:docroot] %>
+  RewriteEngine On
+
+  <Directory <%= @params[:docroot] %>>
+    Options FollowSymLinks
+    AllowOverride All
+    Order allow,deny
+    Allow from all
+  </Directory>
+
+  <Directory />
+    Options FollowSymLinks
+    AllowOverride All
+  </Directory>
+
+  <Location /server-status>
+    SetHandler server-status
+
+    Order Deny,Allow
+    Deny from all
+    Allow from 127.0.0.1
+  </Location>
+
+  LogLevel <%= node[:apache][:log_level] %>
+  ErrorLog <%= node[:apache][:log_dir] %>/<%= @params[:name] %>-error.log
+  CustomLog <%= node[:apache][:log_dir] %>/<%= @params[:name] %>-access.log combined
+
+  FileETag none
+
+  RewriteEngine On
+
+  # Canonical host, <%= @params[:server_name] %>
+  RewriteCond %{HTTP_HOST}   !^<%= @params[:server_name] %> [NC]
+  RewriteCond %{HTTP_HOST}   !^$
+  RewriteRule ^/(.*)$        http://<%= @params[:server_name] %>/$1 [L,R=301]
+
+  RewriteCond %{DOCUMENT_ROOT}/system/maintenance.html -f
+  RewriteCond %{SCRIPT_FILENAME} !maintenance.html
+  RewriteRule ^.*$ /system/maintenance.html [L]
+
+</VirtualHost>
+
+<VirtualHost *:80>
+  ServerName mmadmin.magnusmode.com %>
+  DocumentRoot /srv/www/magnusmode/current/v2/backend/www
+
+  <Directory /srv/www/magnusmode/current/v2/backend/www>
+    Options FollowSymLinks
+    AllowOverride All
+    Order allow,deny
+    Allow from all
+  </Directory>
+
+  <Directory ~ "\.svn">
+    Order allow,deny
+    Deny from all
+  </Directory>
+
+  <Directory ~ "\.git">
+    Order allow,deny
+    Deny from all
+  </Directory>
+
+  LogLevel <%= node[:apache][:log_level] %>
+  ErrorLog <%= node[:apache][:log_dir] %>/<%= @params[:name] %>-error.log
+  CustomLog <%= node[:apache][:log_dir] %>/<%= @params[:name] %>-access.log combined
+  CustomLog <%= node[:apache][:log_dir] %>/<%= @params[:name] %>-ganglia.log ganglia
+
+  FileETag none
+
+  RewriteEngine On
+  <% if node[:apache][:version] == '2.2' -%>
+  Include <%= @params[:rewrite_config] %>*
+  RewriteLog <%= node[:apache][:log_dir] %>/<%= @application_name %>-rewrite.log
+  RewriteLogLevel 0
+  <% else -%>
+  IncludeOptional <%= @params[:rewrite_config] %>*
+  <% end -%>
+
+  <% @environment.each do |key, value| %>
+  SetEnv "<%= key %>" "<%= value %>"
+  <% end %>
+
+  <% if @params[:mounted_at] -%>
+  AliasMatch ^<%= @params[:mounted_at] %>/(.*)$ <%= @params[:docroot] %>$1
+  <% end -%>
+
+  <% if node[:apache][:version] == '2.2' -%>
+  Include <%= @params[:local_config] %>*
+  <% else -%>
+  IncludeOptional <%= @params[:local_config] %>*
+  <% end -%>
+</VirtualHost>
+
