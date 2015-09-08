@@ -11,6 +11,11 @@
     AllowOverride All
     Order allow,deny
     Allow from all
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    RewriteRule . index.php
   </Directory>
 
   <Directory />
@@ -58,6 +63,11 @@
     AllowOverride All
     Order allow,deny
     Allow from all
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    RewriteRule . index.php
   </Directory>
 
   <Directory ~ "\.svn">
