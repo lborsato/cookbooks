@@ -1,5 +1,5 @@
 <VirtualHost *:80>
-  ServerName <%= @params[:server_name] %>
+  ServerName magnusmode.com
   <% if @params[:server_aliases] && !@params[:server_aliases].empty? -%>
   ServerAlias <% @params[:server_aliases].each do |a| %><%= "#{a}" %> <% end %>
   <% end -%>
