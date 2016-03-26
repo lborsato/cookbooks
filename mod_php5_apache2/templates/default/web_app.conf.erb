@@ -176,7 +176,7 @@
 </VirtualHost>
 
 <VirtualHost *:80>
-  ServerName web.magnusmode.com
+  ServerName xweb.magnusmode.com
   DocumentRoot /srv/www/magnusmode/current/v2/frontend/www
 
   <Directory /srv/www/magnusmode/current/v2/frontend/www>
@@ -231,6 +231,48 @@
   IncludeOptional <%= @params[:local_config] %>*
   <% end -%>
 </VirtualHost>
+
+<VirtualHost *:80>
+  ServerName web.magnusmode.com
+  DocumentRoot /srv/www/magnusmode/current/
+
+  <Directory /srv/www/magnusmode/current/>
+    Options FollowSymLinks
+    AllowOverride All
+    Order allow,deny
+    Allow from all
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    RewriteRule . index.php
+  </Directory>
+
+  <Directory ~ "\.svn">
+    Order allow,deny
+    Deny from all
+  </Directory>
+
+  <Directory ~ "\.git">
+    Order allow,deny
+    Deny from all
+  </Directory>
+
+  LogLevel info
+  ErrorLog /var/log/apache2/magnusmode-error.log
+  CustomLog /var/log/apache2/magnusmode-access.log combined
+  CustomLog /var/log/apache2/magnusmode-ganglia.log ganglia
+
+  FileETag none
+
+  RewriteEngine On
+  IncludeOptional /etc/apache2/sites-available/magnusmode.conf.d/rewrite*
+
+
+
+  IncludeOptional /etc/apache2/sites-available/magnusmode.conf.d/local*
+</VirtualHost>
+
 
 <VirtualHost *:80>
   ServerName home.magnusmode.com
